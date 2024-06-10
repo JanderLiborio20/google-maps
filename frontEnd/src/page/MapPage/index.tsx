@@ -4,10 +4,13 @@ import {
   Libraries,
   LoadScript,
   Marker,
-  StandaloneSearchBox,
 } from '@react-google-maps/api';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import POIBox from '../../components/POIBox/index';
+import SearchBox from '../../components/SearchBox';
 import pin from '../../images/pin.png';
+import pinPoi from '../../images/pin_poi.png';
+import { Poi } from '../../models/poi';
 import { Map } from './styles';
 
 const center = {
@@ -15,11 +18,9 @@ const center = {
   lng: -59.9652881,
 };
 
-const bounds = {
-  north: -2.876,
-  south: -3.241,
-  east: -59.895,
-  west: -60.115,
+const TABS = {
+  search: 0,
+  poi: 1,
 };
 
 const libraries: Libraries = ['places'];
@@ -32,6 +33,15 @@ export function MapPage() {
   const [places, setPlaces] = useState<google.maps.places.PlaceResult[]>([]);
   const [selectedPlace, setSelectedPlace] =
     useState<google.maps.places.PlaceResult | null>();
+  const [activeTab, setActiveTab] = useState(TABS.search);
+  const [pois, setPois] = useState<Poi[]>([]);
+  const [poiSelected, setPoiSelected] = useState<Poi | null>(null);
+
+  const mapPanTo = (place: google.maps.places.PlaceResult) => {
+    if (place.geometry && place.geometry.location) {
+      map?.panTo(place.geometry.location);
+    }
+  };
 
   const handleOnPlacesChanged = () => {
     const searchBoxPlaces = searchBox!.getPlaces();
@@ -41,10 +51,28 @@ export function MapPage() {
 
     setSelectedPlace(null);
 
-    if (place.geometry && place.geometry.location) {
-      map?.panTo(place.geometry.location);
-    }
+    mapPanTo(place);
   };
+
+  const updatePois = useCallback(() => {
+    fetch('http://localhost:3001/v1/poi', {
+      headers: {
+        'Content-type': 'application/json',
+      },
+      method: 'GET',
+    }).then(async (response) => {
+      const json = await response.json();
+      if (response.ok) {
+        setPois(json.pois);
+      } else {
+        console.log('Erro ', json.message);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    updatePois();
+  }, [updatePois]);
 
   return (
     <LoadScript
@@ -61,15 +89,34 @@ export function MapPage() {
         >
           <div className="search-box-container">
             <div className="search-box-layer">
-              <StandaloneSearchBox
-                onLoad={setSearchBox}
-                onPlacesChanged={handleOnPlacesChanged}
-                options={{
-                  bounds: bounds,
-                }}
-              >
-                <input type="text" className="search-box-input" />
-              </StandaloneSearchBox>
+              <nav>
+                <button
+                  className={activeTab === TABS.search ? 'active' : ''}
+                  onClick={() => setActiveTab(TABS.search)}
+                >
+                  Busca
+                </button>
+                <button
+                  className={activeTab === TABS.poi ? 'active' : ''}
+                  onClick={() => setActiveTab(TABS.poi)}
+                >
+                  POI
+                </button>
+              </nav>
+
+              {activeTab === TABS.search && (
+                <SearchBox
+                  onLoad={setSearchBox}
+                  onPlacesChanged={handleOnPlacesChanged}
+                />
+              )}
+
+              {activeTab === TABS.poi && (
+                <POIBox
+                  onPlaceSelected={(place) => mapPanTo(place)}
+                  onPoiSaved={updatePois}
+                />
+              )}
             </div>
           </div>
 
@@ -80,7 +127,10 @@ export function MapPage() {
                   key={index}
                   position={place.geometry.location}
                   onClick={() => setSelectedPlace(place)}
-                  icon={pin}
+                  icon={{
+                    url: pin,
+                    scaledSize: new google.maps.Size(36, 36),
+                  }}
                 >
                   {selectedPlace && selectedPlace === place && (
                     <InfoWindow
@@ -96,6 +146,43 @@ export function MapPage() {
                 </Marker>
               ) : null}
             </>
+          ))}
+          {pois.map((poi, index) => (
+            <Marker
+              key={`marker-poi-${index}`}
+              position={{
+                lat: poi.lat,
+                lng: poi.lng,
+              }}
+              onClick={() => setPoiSelected(poi)}
+              icon={{
+                url: pinPoi,
+                scaledSize: new google.maps.Size(36, 36),
+              }}
+            >
+              {poiSelected && poiSelected === poi && (
+                <InfoWindow
+                  key={`info-window-poi-${index}`}
+                  onCloseClick={() => setSelectedPlace(null)}
+                >
+                  <div>
+                    <h1>Ponto de Interesse (POI)</h1>
+                    <div>
+                      <strong>Endereço: </strong>
+                      {poiSelected.address}
+                    </div>
+                    <div>
+                      <strong>Nome: </strong>
+                      {poiSelected.address}
+                    </div>
+                    <div>
+                      <strong>Descrição: </strong>
+                      {poiSelected.description}
+                    </div>
+                  </div>
+                </InfoWindow>
+              )}
+            </Marker>
           ))}
         </GoogleMap>
       </Map>
