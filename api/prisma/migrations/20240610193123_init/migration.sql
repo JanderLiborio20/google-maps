@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Poit" (
+CREATE TABLE "Poi" (
     "id" SERIAL NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL,
     "lng" DOUBLE PRECISION NOT NULL,
@@ -9,5 +9,5 @@ CREATE TABLE "Poit" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Poit_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Poi_pkey" PRIMARY KEY ("id")
 );
