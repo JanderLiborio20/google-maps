@@ -15,6 +15,7 @@ type ISearchBoxProps = {
   onPlacesChanged?: () => void;
   register?: UseFormRegister<FormPoi>;
   name?: 'name' | 'address' | 'description';
+  placeholder?: string;
 };
 
 export default function SearchBox({
@@ -22,6 +23,7 @@ export default function SearchBox({
   onPlacesChanged,
   name,
   register,
+  placeholder,
 }: ISearchBoxProps) {
   return (
     <StandaloneSearchBox
@@ -31,7 +33,7 @@ export default function SearchBox({
         bounds: bounds,
       }}
     >
-      <Input register={register} name={name} />
+      <Input register={register} name={name} placeholder={placeholder} />
     </StandaloneSearchBox>
   );
 }

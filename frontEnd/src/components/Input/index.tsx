@@ -3,7 +3,7 @@ import { FormPoi } from '../../models/poi';
 import { InputMain } from './styles';
 
 type InputProps = {
-  placeholder?: string;
+  placeholder?: string | undefined;
   register?: UseFormRegister<FormPoi>;
   name?: 'name' | 'address' | 'description';
 };

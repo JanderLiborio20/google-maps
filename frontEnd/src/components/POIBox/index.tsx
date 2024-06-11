@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormPoi } from '../../models/poi';
+import Button from '../Button';
 import Input from '../Input';
 import SearchBox from '../SearchBox';
 import { POIContainerForm } from './styles';
@@ -64,9 +65,7 @@ export default function POIBox({ onPlaceSelected, onPoiSaved }: IPOIBoxProps) {
       <Input placeholder="Nome" register={register} name="name" />
       <Input placeholder="Descrição" register={register} name="description" />
 
-      <button className="button-poi-save" type="submit">
-        Salvar
-      </button>
+      <Button type="submit">Salvar</Button>
     </POIContainerForm>
   );
 }
