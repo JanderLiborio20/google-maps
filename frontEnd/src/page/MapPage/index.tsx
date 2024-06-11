@@ -129,7 +129,13 @@ export function MapPage() {
     return {
       directions: response,
       markerOptions: {
-        icon: { url: pinRoute },
+        icon: {
+          url: pinRoute,
+          scaledSize: {
+            width: 36,
+            height: 36,
+          },
+        },
       },
     };
   }, [response]);
