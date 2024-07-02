@@ -1,7 +1,7 @@
-import { MapPage } from './page/MapPage';
+import { Route } from './page/route';
 
 function App() {
-  return <MapPage />;
+  return <Route />;
 }
 
 export default App;

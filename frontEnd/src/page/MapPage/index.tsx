@@ -144,6 +144,15 @@ export function MapPage() {
     updatePois();
   }, [updatePois]);
 
+  function onMarkerDragEnd(coord: any, index: any) {
+    console.log('index: ', index);
+    const { latLng } = coord;
+    const lat = latLng.lat();
+    console.log('lat: ', lat);
+    const lng = latLng.lng();
+    console.log('lng: ', lng);
+  }
+
   return (
     <LoadScript
       googleMapsApiKey={VITE_MAPS_API_KEY}
@@ -208,13 +217,15 @@ export function MapPage() {
             <>
               {place.geometry && place.geometry.location ? (
                 <Marker
-                  key={index}
+                  key={`${index}-marker`}
                   position={place.geometry.location}
                   onClick={() => setSelectedPlace(place)}
                   icon={{
                     url: pin,
                     scaledSize: new google.maps.Size(36, 36),
                   }}
+                  draggable={true}
+                  onDragEnd={(coord: any) => onMarkerDragEnd(coord, index)}
                 >
                   {selectedPlace && selectedPlace === place && (
                     <InfoWindow
@@ -276,6 +287,8 @@ export function MapPage() {
                 url: pinRoute,
                 scaledSize: new google.maps.Size(36, 36),
               }}
+              draggable={true}
+              onDragEnd={(coord: any) => onMarkerDragEnd(coord, 1)}
             />
           )}
 
@@ -286,6 +299,7 @@ export function MapPage() {
                 url: pinRoute,
                 scaledSize: new google.maps.Size(36, 36),
               }}
+              onDragEnd={(coord: any) => onMarkerDragEnd(coord, 1)}
             />
           )}
 
