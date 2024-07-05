@@ -14,6 +14,7 @@ export default function RouteBox({
   traceRoute,
 }: IRouteBoxProps) {
   const [searchBoxA, setSearchBoxA] = useState<google.maps.places.SearchBox>();
+
   const [searchBoxB, setSearchBoxB] = useState<google.maps.places.SearchBox>();
 
   const handleOriginChanged = () => {

@@ -1,7 +1,7 @@
-import { Route } from './page/route';
+import MultiPoints from './page/multiPoints';
 
 function App() {
-  return <Route />;
+  return <MultiPoints />;
 }
 
 export default App;

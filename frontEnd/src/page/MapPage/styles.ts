@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 
 export const Map = styled.div`
-  width: 100vw;
+  width: 50%;
   height: 100vh;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
 
   .search-box-container {
     position: absolute;
@@ -41,5 +45,22 @@ export const Map = styled.div`
 
   .search-box-layer > nav > button:nth-child(1) {
     border-right: 1px solid #888;
+  }
+`;
+
+export const StepContainer = styled.div`
+  width: 50%;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  .step {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
   }
 `;
