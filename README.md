@@ -91,7 +91,7 @@ E para iniciar o _frontend_ basta rodar `npm dev` em sua respectiva pasta.
 Neste projeto aprendemos a utilizar muito bem o _React_, e principalmente o google-maps-api,
 
 ```typescript
-\frontend\src\pages\Home\components\ContactsList\index.js
+\frontend\src\pages\MapPage\index.js
 
  <GoogleMap
           center={center}
